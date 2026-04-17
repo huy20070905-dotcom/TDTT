@@ -4,6 +4,6 @@ using namespace std;
 
 
 int main(){
-    std:: cout<<
+  cout<<aa;
     return 0;
 }
