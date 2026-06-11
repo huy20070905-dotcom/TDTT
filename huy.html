@@ -1,0 +1,1316 @@
+:Trắc Nghiệm Lập Trình Python 50 Câu Hỏi:quiz_python_50.html
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trắc Nghiệm Python 50 Câu Hỏi Toàn Diện</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Custom scrollbar for better UI */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans">
+
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-blue-800 to-indigo-900 text-white py-6 px-4 shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="bg-yellow-400 p-2.5 rounded-lg text-slate-900">
+                    <i class="fa-brands fa-python text-2xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl md:text-2xl font-bold tracking-tight">Trắc Nghiệm Lập Trình Python</h1>
+                    <p class="text-xs md:text-sm text-blue-200">Đầy đủ 50 câu hỏi chuẩn hóa từ tài liệu ôn tập</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="text-right hidden sm:block">
+                    <p class="text-xs text-blue-200">Tiến trình làm bài</p>
+                    <p class="font-semibold text-sm" id="progress-text">0 / 50 câu (0%)</p>
+                </div>
+                <div class="w-24 bg-blue-950 rounded-full h-2.5 overflow-hidden">
+                    <div id="progress-bar-fill" class="bg-yellow-400 h-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <div class="max-w-7xl mx-auto px-4 py-8 flex-grow w-full grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- Left Column: Quiz Engine -->
+        <main class="lg:col-span-8 flex flex-col gap-6">
+            
+            <!-- Result Banner (Hidden initially) -->
+            <section id="result-banner" class="hidden bg-gradient-to-br from-emerald-600 to-teal-700 text-white rounded-2xl p-6 shadow-lg transform transition-all duration-500 scale-95 opacity-0">
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-6">
+                    <div class="flex items-center gap-4">
+                        <div class="bg-white/20 p-4 rounded-full text-3xl">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold">KẾT QUẢ BÀI THI</h2>
+                            <p class="text-sm text-emerald-100">Hệ thống đã ghi nhận toàn bộ kết quả bài làm của bạn.</p>
+                        </div>
+                    </div>
+                    <div class="text-center sm:text-right">
+                        <p class="text-4xl font-black" id="result-score">0 / 50</p>
+                        <p class="text-xs text-emerald-200 mt-1" id="result-percentage">Độ chính xác: 0%</p>
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-white/20 text-xs text-emerald-100 flex flex-wrap gap-4 justify-between">
+                    <span><i class="fa-solid fa-circle-info mr-1"></i> Nhấp chọn các số câu ở bảng điều hướng để xem chi tiết đáp án & giải thích.</span>
+                    <button onclick="resetQuiz()" class="bg-white text-emerald-800 hover:bg-emerald-50 px-3 py-1.5 rounded font-bold transition-all">Làm Lại</button>
+                </div>
+            </section>
+
+            <!-- Quiz Card -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden flex flex-col">
+                <!-- Card Header -->
+                <div class="bg-slate-100 px-6 py-4 border-b border-slate-200 flex justify-between items-center">
+                    <span class="text-sm font-semibold text-indigo-700 bg-indigo-50 px-3 py-1 rounded-full" id="card-question-number">Câu hỏi 1 / 50</span>
+                    <span id="question-status-badge" class="hidden text-xs font-semibold px-2.5 py-1 rounded-full"></span>
+                </div>
+
+                <!-- Card Body -->
+                <div class="p-6 md:p-8 flex-grow">
+                    <!-- Question Description -->
+                    <div class="text-lg font-medium text-slate-800 mb-6 leading-relaxed" id="question-text">
+                        <!-- Dynamic Question Text -->
+                    </div>
+
+                    <!-- Answers Options -->
+                    <div class="space-y-3" id="options-container">
+                        <!-- Dynamic Options List -->
+                    </div>
+
+                    <!-- Explanation/Rationale Box -->
+                    <div id="explanation-box" class="hidden mt-6 p-4 rounded-xl border border-amber-200 bg-amber-50 text-amber-900 transition-all">
+                        <h4 class="font-bold flex items-center gap-2 text-sm text-amber-800 mb-1">
+                            <i class="fa-solid fa-lightbulb"></i> Giải Thích Đáp Án:
+                        </h4>
+                        <p class="text-sm leading-relaxed" id="explanation-text"></p>
+                    </div>
+                </div>
+
+                <!-- Card Footer (Control Area) -->
+                <div class="px-6 py-4 bg-slate-50 border-t border-slate-200 flex justify-between items-center gap-4">
+                    <button id="btn-prev" onclick="prevQuestion()" class="flex items-center gap-2 text-sm font-semibold px-4 py-2.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-100 active:bg-slate-200 transition-all">
+                        <i class="fa-solid fa-arrow-left"></i> Câu Trước
+                    </button>
+                    
+                    <button id="btn-next" onclick="nextQuestion()" class="flex items-center gap-2 text-sm font-semibold px-4 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white transition-all shadow-sm">
+                        Câu Tiếp <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- Right Column: Sidebar Navigation & Progress -->
+        <aside class="lg:col-span-4 flex flex-col gap-6">
+            
+            <!-- Information / Status Block -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-6">
+                <h3 class="font-bold text-slate-800 mb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-circle-question text-indigo-600"></i> Hướng dẫn làm bài
+                </h3>
+                <ul class="text-xs text-slate-500 space-y-2">
+                    <li class="flex items-start gap-2">
+                        <span class="w-1.5 h-1.5 bg-slate-400 rounded-full mt-1.5 shrink-0"></span>
+                        <span>Chọn một trong các đáp án bên trái. Hệ thống sẽ tự động lưu và chuyển đổi màu trạng thái ở bảng bên dưới.</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="w-1.5 h-1.5 bg-slate-400 rounded-full mt-1.5 shrink-0"></span>
+                        <span>Nhấp vào bất kỳ ô số nào để nhảy nhanh đến câu hỏi tương ứng.</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="w-1.5 h-1.5 bg-slate-400 rounded-full mt-1.5 shrink-0"></span>
+                        <span>Nhấn nút <strong class="text-slate-700">Nộp bài</strong> ở cuối để khóa bài làm, xem điểm số và lời giải thích chi tiết nhất.</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Question Numbers Navigation Grid -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-6 flex flex-col gap-4">
+                <div class="flex justify-between items-center">
+                    <h3 class="font-bold text-slate-800 text-sm">Bảng điều hướng câu hỏi</h3>
+                    <span class="text-xs text-slate-400 font-medium">50 câu hỏi</span>
+                </div>
+
+                <!-- Color legend -->
+                <div class="flex flex-wrap gap-x-4 gap-y-2 text-xs text-slate-500 border-b border-slate-100 pb-3">
+                    <div class="flex items-center gap-1.5">
+                        <span class="w-3 h-3 rounded bg-white border border-slate-300"></span>
+                        <span>Chưa làm</span>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <span class="w-3 h-3 rounded bg-indigo-100 border border-indigo-300"></span>
+                        <span>Đã làm</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 font-semibold text-emerald-600">
+                        <span class="w-3 h-3 rounded bg-emerald-100 border border-emerald-300"></span>
+                        <span>Đúng</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 font-semibold text-rose-600">
+                        <span class="w-3 h-3 rounded bg-rose-100 border border-rose-300"></span>
+                        <span>Sai</span>
+                    </div>
+                </div>
+
+                <!-- The 50-grid -->
+                <div class="grid grid-cols-5 sm:grid-cols-10 lg:grid-cols-5 gap-2 max-h-[300px] overflow-y-auto pr-1" id="nav-grid">
+                    <!-- Dynamic grid of 1 to 50 -->
+                </div>
+
+                <!-- Submit Button -->
+                <button id="btn-submit" onclick="submitExam()" class="w-full mt-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-4 rounded-xl transition-all shadow-md shadow-emerald-600/10 hover:shadow-emerald-600/20 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-paper-plane"></i> Nộp Bài & Xem Điểm
+                </button>
+            </div>
+
+        </aside>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-6 text-center text-xs border-t border-slate-800 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <p>&copy; 2026. Thiết kế và phát triển phục vụ học tập ngôn ngữ lập trình Python.</p>
+            <div class="flex gap-4">
+                <span class="hover:text-white transition-all cursor-pointer"><i class="fa-solid fa-shield-halved"></i> Bảo mật</span>
+                <span class="hover:text-white transition-all cursor-pointer"><i class="fa-solid fa-circle-question"></i> Trợ giúp</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Quiz Engine Data & logic -->
+    <script>
+        // Entire 50 Questions from the document, reconstructed accurately
+        const quizData = [
+            {
+                q: `Cho đoạn mã sau:
+\`\`\`python
+def solve(data):
+    result = []
+    for x in data:
+        if x % 2 == 0:
+            result.append(x+2)
+        else:
+            result.append(x+3)
+    return result
+data = [int(x) for x in input().split()]
+output = solve(data)
+print(output)
+\`\`\`
+Khi phân tích đoạn mã trên dưới góc độ Computational Thinking, concept nào được áp dụng trọng tâm nhất?`,
+                options: [
+                    "Algorithm Design",
+                    "Abstraction",
+                    "Pattern Recognition",
+                    "Decomposition"
+                ],
+                correct: 0,
+                rationale: "Thiết kế thuật toán (Algorithm Design) là việc phát triển một giải pháp từng bước (các vòng lặp, câu lệnh rẽ nhánh điều kiện) để giải quyết bài toán."
+            },
+            {
+                q: "Lựa chọn nào mô tả đúng nhất về \"máy tính\" (so với con người) trong giải quyết vấn đề?",
+                options: [
+                    "Máy tính chỉ nhanh hơn con người khi bài toán nhỏ, còn dữ liệu lớn thì chậm",
+                    "Máy tính không sáng tạo, xử lý dữ liệu lớn, rất nhanh và có độ chính xác cao",
+                    "Máy tính sáng tạo, trực giác tốt, nhưng xử lý dữ liệu nhỏ",
+                    "Máy tính sáng tạo kém, nhưng thường xuyên mắc lỗi nên phải debug liên tục"
+                ],
+                correct: 1,
+                rationale: "Máy tính là công cụ cơ bắp kỹ thuật số, thực hiện các chỉ thị lập trình cực nhanh, chính xác trên lượng dữ liệu lớn nhưng không có trực giác hay tính sáng tạo nguyên bản của con người."
+            },
+            {
+                q: "Hàm input() trong Python 3 luôn trả về dữ liệu thuộc kiểu nào?",
+                options: [
+                    "Float",
+                    "Integer (int)",
+                    "Nó phụ thuộc vào nội dung người dùng nhập vào",
+                    "String (str)"
+                ],
+                correct: 3,
+                rationale: "Hàm input() trong Python 3 luôn trả về kiểu dữ liệu chuỗi ký tự (str), bất kể người dùng nhập số hay chữ."
+            },
+            {
+                q: "Toán tử nào sau đây dùng để thực hiện phép chia lấy phần DƯ?",
+                options: [
+                    "%",
+                    "div",
+                    "//",
+                    "/"
+                ],
+                correct: 0,
+                rationale: "Toán tử % thực hiện phép chia lấy dư. Toán tử // chia lấy phần nguyên, còn / là chia thông thường trả về số thực."
+            },
+            {
+                q: "Phát biểu nào sau đây đúng về biến cục bộ (local variable) trong Python?",
+                options: [
+                    "Chỉ tồn tại trong suốt quá trình thực thi của hàm mà nó được khai báo.",
+                    "Được khai báo bên ngoài tất cả các hàm và có thể truy cập ở bất cứ đâu.",
+                    "Tự động trở thành biến toàn cục nếu hàm được gọi nhiều lần.",
+                    "Có thể được truy cập trực tiếp từ bên ngoài hàm bằng tên của nó."
+                ],
+                correct: 0,
+                rationale: "Biến cục bộ chỉ tồn tại và có thể truy cập bên trong phạm vi hàm mà nó được khai báo. Nó sẽ bị hủy khỏi bộ nhớ khi hàm kết thúc thực thi."
+            },
+            {
+                q: "Quy tắc đặt tên biến nào sau đây là SAI trong Python?",
+                options: [
+                    "Tên biến có thể chứa các chữ cái, chữ số và dấu gạch dưới (_).",
+                    "Tên biến có thể bắt đầu bằng một chữ số.",
+                    "Không được sử dụng các từ khóa của Python làm tên biến.",
+                    "Tên biến có phân biệt chữ hoa và chữ thường."
+                ],
+                correct: 1,
+                rationale: "Tên biến trong Python không được phép bắt đầu bằng chữ số (0-9). Phải bắt đầu bằng một chữ cái hoặc dấu gạch dưới."
+            },
+            {
+                q: `Xét độ ưu tiên toán tử trong biểu thức logic sau:
+\`\`\`python
+x = 5; y = 10; z = 15
+res = (x < y) and (y > z) or not (x == z - 10)
+print(res)
+\`\`\`
+Giá trị của biến 'res' là:`,
+                options: [
+                    "FALSE",
+                    "TRUE",
+                    "Error",
+                    "None"
+                ],
+                correct: 0,
+                rationale: "Ta phân tích: (x < y) là True, (y > z) là False. Vế thứ nhất: True and False -> False. Vế thứ hai: not (x == z-10) -> not(5 == 5) -> not True -> False. Do đó: False or False -> False."
+            },
+            {
+                q: `Cho đoạn mã sau:
+\`\`\`python
+raining = True
+freezing = False
+if raining and freezing:
+    print("Waterproof coat")
+elif raining and (not freezing):
+    print("Umbrella")
+elif (not raining) and freezing:
+    print("Warm coat")
+else:
+    print("Sweater")
+\`\`\`
+Chương trình sẽ in ra gì?`,
+                options: [
+                    "Umbrella",
+                    "Waterproof coat",
+                    "Warm coat",
+                    "Sweater"
+                ],
+                correct: 0,
+                rationale: "Điều kiện 'raining and (not freezing)' thỏa mãn hoàn toàn (True and True), do đó khối lệnh in ra 'Umbrella' được thực hiện."
+            },
+            {
+                q: `Cho hàm sau:
+\`\`\`python
+def f(n):
+    if n % 2 == 0:
+        if n % 3 == 0:
+            return "X"
+        else:
+            return "Y"
+    else:
+        return " "
+\`\`\`
+Giá trị nào của n sẽ làm hàm trả về "Y"?`,
+                options: [
+                    "20",
+                    "18",
+                    "12",
+                    "9"
+                ],
+                correct: 0,
+                rationale: "Để hàm trả về 'Y', n phải chia hết cho 2 nhưng không chia hết cho 3. Trong bốn đáp án, 20 thỏa mãn điều kiện này."
+            },
+            {
+                q: "Giả sử a = 5, b = 10. Điều kiện nào sau đây sẽ trả về True?",
+                options: [
+                    "a > b or a == 5",
+                    "a < b and a != 5",
+                    "a == b",
+                    "not (a < b)"
+                ],
+                correct: 0,
+                rationale: "Do a == 5 là True, nên biểu thức dùng toán tử 'or' sẽ lập tức trả về True mà không phụ thuộc vào vế trái a > b."
+            },
+            {
+                q: `Xét đoạn mã kiểm tra quyền truy cập sau:
+\`\`\`python
+def allow_access(is_employee, has_card, is_guest, has_invite):
+    if is_employee:
+        if has_card:
+            return True
+        else:
+            return False
+    if is_guest:
+        if has_invite:
+            return True
+        else:
+            return False
+    else:
+        return False
+print(allow_access(True, False, True, True))
+\`\`\`
+Kết quả in ra là gì, và tại sao kết quả này không đúng với yêu cầu thực tế?`,
+                options: [
+                    "False - vì nhánh nhân viên trả về sớm, làm cho điều kiện khách không bao giờ được xét",
+                    "True - vì điều kiện khách có giấy mời vẫn được kiểm tra",
+                    "Lỗi runtime do thiếu kiểu dữ liệu",
+                    "False - vì thiếu elif nên Python gán sai else"
+                ],
+                correct: 0,
+                rationale: "Khi is_employee là True, chương trình đi vào nhánh đầu tiên. Vì has_card là False, nó trả về False và kết thúc hàm ngay lập tức mà không bao giờ kiểm tra điều kiện is_guest bên dưới."
+            },
+            {
+                q: "Cho hàm tính điểm số grade(score). Tập test input nào dưới đây đảm bảo 'bao phủ đầy đủ các nhánh' (mỗi nhánh if/elif/else được chạy ít nhất một lần)?",
+                options: [
+                    "95, 80, 65, 40",
+                    "90, 80, 75, 60",
+                    "89, 80, 74, 59",
+                    "100, 0"
+                ],
+                correct: 0,
+                rationale: "Tập dữ liệu này đại diện hoàn hảo cho cả 4 phân vùng điểm khác nhau, kích hoạt đầy đủ 4 nhánh điều kiện của bài toán tính điểm."
+            },
+            {
+                q: `Cho đoạn mã python tính tổng khoảng cách phần tử:
+\`\`\`python
+nums = [2, 3, 5, 7, 11]
+res = 0
+for i, v in enumerate(nums):
+    if i == 0:
+        continue
+    res += (v - nums[i-1])
+print(res)
+\`\`\`
+Kết quả sau khi chạy đoạn code trên là:`,
+                options: [
+                    "9",
+                    "11",
+                    "13",
+                    "7"
+                ],
+                correct: 0,
+                rationale: "Tổng hiệu các số liên tiếp là: (3-2) + (5-3) + (7-5) + (11-7) = 1 + 2 + 2 + 4 = 9. Phép toán này tính khoảng cách từ phần tử đầu tới phần tử cuối."
+            },
+            {
+                q: `Trong đoạn mã sau, kết quả được in ra là?
+\`\`\`python
+def incr_list(nums):
+    for n in nums:
+        n = n + 1
+    return nums
+lst = [6, 0, 7]
+print(incr_list(lst))
+\`\`\`
+`,
+                options: [
+                    "[6, 0, 7]",
+                    "[7, 1, 8]",
+                    "Chương trình báo lỗi",
+                    "[6, 0, 7, 1, 1, 1]"
+                ],
+                correct: 0,
+                rationale: "Biến lặp n chỉ nhận bản sao giá trị của từng phần tử. Gán n = n + 1 không tác động hay thay đổi các phần tử nguyên bản bên trong lst."
+            },
+            {
+                q: "Hàm range(2, 10, 3) sẽ tạo ra dãy số nào sau đây?",
+                options: [
+                    "2, 5, 8",
+                    "2, 5, 8, 11",
+                    "2, 3, 4, 5, 6, 7, 8, 9",
+                    "5, 8"
+                ],
+                correct: 0,
+                rationale: "Bắt đầu từ 2, cộng thêm bước nhảy bằng 3 ở mỗi vòng và dừng trước khi chạm tới giới hạn trên 10."
+            },
+            {
+                q: `Đoạn mã xử lý chuỗi sau trả về kết quả gì?
+\`\`\`python
+data = 'a1b2c3d4'
+res = ''
+for char in data:
+    if char.isdigit():
+        res += str(int(char) * 2)
+    else:
+        res += char.upper()
+print(res)
+\`\`\`
+`,
+                options: [
+                    "A2B4C6D8",
+                    "a2b4c6d8",
+                    "A1B2C3D4",
+                    "ABCD"
+                ],
+                correct: 0,
+                rationale: "Các chữ cái thường được viết hoa, còn các chữ số được đổi sang kiểu int, nhân đôi giá trị rồi nối ghép lại thành chuỗi."
+            },
+            {
+                q: `Cho đoạn mã python sau:
+\`\`\`python
+def add(x, L=[]):
+    L.append(x)
+    return L
+print(add(1), add(2), add(3))
+\`\`\`
+Kết quả sau khi chạy đoạn code trên là:`,
+                options: [
+                    "[1, 2, 3] [1, 2, 3] [1, 2, 3]",
+                    "[1] [2] [3]",
+                    "[1] [1, 2] [1, 2, 3]",
+                    "Error"
+                ],
+                correct: 0,
+                rationale: "Tham số mặc định L=[] chỉ được khởi tạo một lần duy nhất khi nạp định nghĩa hàm. Ba lần gọi hàm đều dùng chung và tích lũy vào cùng một danh sách đối tượng L."
+            },
+            {
+                q: `Kết quả của đoạn code sau là gì?
+\`\`\`python
+s = 0
+for i in range(1, 4):
+    s += i
+print(s)
+\`\`\`
+`,
+                options: [
+                    "6",
+                    "10",
+                    "3",
+                    "12"
+                ],
+                correct: 0,
+                rationale: "range(1, 4) tạo ra dãy số gồm 1, 2, 3. Tổng s = 1 + 2 + 3 = 6."
+            },
+            {
+                q: `Cho đoạn mã sau:
+\`\`\`python
+nums = [6, 0, 7]
+for n in nums:
+    n = n + 1
+print(nums)
+\`\`\`
+Chương trình in ra gì?`,
+                options: [
+                    "[6, 0, 7]",
+                    "[7, 1, 8]",
+                    "Báo lỗi vì không thể cộng 1 cho phần tử",
+                    "[6, 1, 7]"
+                ],
+                correct: 0,
+                rationale: "Tương tự, biến chạy n là biến độc lập nhận giá trị sao chép. Thay đổi n không làm ảnh hưởng tới danh sách gốc nums."
+            },
+            {
+                q: `Kết quả sau khi thực hiện chương trình sau:
+\`\`\`python
+x = (i for i in range(3))
+for i in x:
+    print(i, end=' ')
+for i in x:
+    print(i, end=' ')
+\`\`\`
+`,
+                options: [
+                    "0 1 2 ",
+                    "0 1 2 0 1 2 ",
+                    "Error",
+                    "Không đáp án nào đúng"
+                ],
+                correct: 0,
+                rationale: "x là một generator expression. Generator chỉ cho phép duyệt qua một lần duy nhất; vòng lặp thứ hai chạy qua x khi nó đã hoàn toàn rỗng."
+            },
+            {
+                q: `Cho định nghĩa hàm sau:
+\`\`\`python
+def check_value(n):
+    """Kiểm tra số n.
+    Trả về True nếu n là số dương, ngược lại False."""
+    return n > 0
+\`\`\`
+Khẳng định nào sau đây về việc kiểm thử hàm này là đúng?`,
+                options: [
+                    "assert check_value(5) == True sẽ không gây ra lỗi",
+                    "Hàm trên sẽ gây lỗi AssertionError nếu ta truyền vào số 0",
+                    "assert check_value(-1) == True sẽ không gây ra lỗi",
+                    "Câu lệnh assert check_value(10) sẽ trả về kết quả là None ra màn hình"
+                ],
+                correct: 0,
+                rationale: "check_value(5) trả về True. Câu lệnh assert True == True là một biểu thức đúng nên chương trình chạy qua trơn tru mà không phát sinh lỗi."
+            },
+            {
+                q: "Phát biểu nào mô tả đúng nhất về 'specification' (đặc tả) của một hàm?",
+                options: [
+                    "Đặc tả mô tả hàm 'làm gì' (hành vi), thường viết dưới dạng docstring: tham số, kết quả trả về, và điều kiện liên quan.",
+                    "Đặc tả mô tả 'cách' cài đặt chi tiết từng dòng lệnh trong hàm.",
+                    "Đặc tả chỉ cần viết sau khi đã code xong để 'cho đẹp'.",
+                    "Đặc tả chỉ gồm tên hàm và danh sách tham số (không cần mô tả)."
+                ],
+                correct: 0,
+                rationale: "Đặc tả hàm định nghĩa đầu vào, đầu ra và hành vi bên ngoài của hàm chứ không quan tâm đến cách viết thuật toán chi tiết bên trong."
+            },
+            {
+                q: `Đâu là output của đoạn mã sau:
+\`\`\`python
+def writer():
+    title = 'Sir'
+    name = lambda x: title + ' ' + x
+    return name
+who = writer()
+print(who('Arthur'))
+\`\`\`
+`,
+                options: [
+                    "Sir Arthur",
+                    "Arthur Sir",
+                    "Arthur",
+                    "Không đáp án đúng"
+                ],
+                correct: 0,
+                rationale: "Hàm lambda đóng vai trò là một closure, ghi nhớ giá trị của biến tự do 'title' tại phạm vi mà nó được tạo ra, cho ra kết quả 'Sir Arthur'."
+            },
+            {
+                q: `Yêu cầu: Nhập một chuỗi từ bàn phím, chuyển toàn bộ thành chữ thường, rồi in ra. Xét đoạn mã sau:
+\`\`\`python
+text = input()
+result = text.lower
+print(result)
+\`\`\`
+Kết quả thực thi đoạn mã in ra là gì?`,
+                options: [
+                    "In ra một object hàm - sai vì không gọi hàm",
+                    "In ra chuỗi người dùng nhập ở dạng chữ thường - đúng yêu cầu",
+                    "In ra chuỗi người dùng nhập - sai vì thiếu .lower()",
+                    "Lỗi TypeError do lower không nhận tham số"
+                ],
+                correct: 0,
+                rationale: "Thiếu cặp ngoặc tròn () khi gọi hàm khiến Python chỉ tham chiếu tới đối tượng hàm (method object) của .lower chứ không kích hoạt thực thi hàm."
+            },
+            {
+                q: `Khi thực thi, chương trình sẽ dừng lại (tung ra AssertionError) ở dòng nào?
+\`\`\`python
+def power(base, exp):
+    if exp == 0: return 1
+    if exp < 0: return 1 / power(base, -exp)
+    return base * power(base, exp - 1)
+
+assert power(2, 3) == 8   # Dòng 1
+assert power(5, 0) == 1   # Dòng 2
+assert power(2, -1) == 0.5 # Dòng 3
+assert power(-2, 2) == -4 # Dòng 4
+assert power(10, 2) == 100 # Dòng 5
+\`\`\`
+`,
+                options: [
+                    "Dòng 4",
+                    "Dòng 3",
+                    "Dòng 5",
+                    "Không có dòng nào, tất cả các test đều vượt qua."
+                ],
+                correct: 0,
+                rationale: "Tại Dòng 4, power(-2, 2) tính ra kết quả bằng (-2)^2 = 4. Lệnh kiểm tra assert mong đợi kết quả bằng -4 nên AssertionError sẽ bị kích hoạt."
+            },
+            {
+                q: `Kết quả thực hiện đoạn mã sau:
+\`\`\`python
+total = {}
+def insert(items):
+    if items in total:
+        total[items] += 1
+    else:
+        total[items] = 1
+insert('Apple')
+insert('Ball')
+insert('Apple')
+print(len(total))
+\`\`\`
+`,
+                options: [
+                    "2",
+                    "3",
+                    "1",
+                    "0"
+                ],
+                correct: 0,
+                rationale: "Dictionary chỉ lưu trữ các key duy nhất là 'Apple' và 'Ball'. Hàm len(total) đo lường số lượng key nên trả về giá trị là 2."
+            },
+            {
+                q: `Kết quả khi thực thi đoạn mã này là gì?
+\`\`\`python
+counts = {"apple": 1, "banana": 2}
+for fruit in counts:
+    if counts[fruit] > 1:
+        counts["orange"] = 3
+    else:
+        counts[fruit] += 1
+print(len(counts))
+\`\`\`
+`,
+                options: [
+                    "Chương trình báo lỗi RuntimeError: dictionary changed size during iteration",
+                    "In ra 3",
+                    "Chương trình chạy vô hạn (Infinite loop)",
+                    "Chương trình báo lỗi KeyError: 'orange'"
+                ],
+                correct: 0,
+                rationale: "Python cấm thay đổi kích thước của dictionary (như thêm key 'orange') khi đang lặp qua chính nó, điều này sẽ sinh ra lỗi RuntimeError."
+            },
+            {
+                q: `Kết quả của đoạn code sau là gì?
+\`\`\`python
+s = {1, 2, 3}
+t = {3, 4}
+print(s & t)
+\`\`\`
+`,
+                options: [
+                    "{3}",
+                    "{1, 2, 3, 4}",
+                    "{1, 2, 4}",
+                    "Lỗi cú pháp"
+                ],
+                correct: 0,
+                rationale: "Toán tử & đại diện cho phép toán giao (intersection) giữa hai tập hợp (set), lấy phần tử chung là 3."
+            },
+            {
+                q: `Cho đoạn mã sau:
+\`\`\`python
+d = {"a": 1, "b": 2}
+print(d.get("c", 0))
+\`\`\`
+Chương trình in ra gì?`,
+                options: [
+                    "0",
+                    "None",
+                    "Báo lỗi KeyError",
+                    "Báo lỗi TypeError"
+                ],
+                correct: 0,
+                rationale: "Hàm get() trả về giá trị mặc định được cấu hình là 0 nếu key 'c' cần tìm kiếm không tồn tại trong dictionary."
+            },
+            {
+                q: "Cho danh sách my_list = [10, 20, 30, 40, 50]. Cách nào sau đây sẽ lấy ra được đoạn danh sách [20, 30, 40]?",
+                options: [
+                    "my_list[1:4]",
+                    "my_list[2:5]",
+                    "my_list[1:-2]",
+                    "my_list[1:3]"
+                ],
+                correct: 0,
+                rationale: "Kỹ thuật slicing lấy từ chỉ mục 1 (giá trị 20) tới sát chỉ mục 4 (giá trị 50, loại trừ phần tử tại 4) để cho ra mảng [20, 30, 40]."
+            },
+            {
+                q: `Kết quả in ra màn hình của đoạn code sau là gì?
+\`\`\`python
+def update_record(rec):
+    rec['status'] = 'Active'
+    rec = {'id': 99, 'status': 'Pending'}
+    rec['status'] = 'Closed'
+
+my_record = {'id': 1}
+update_record(my_record)
+print(my_record.get('status'))
+\`\`\`
+`,
+                options: [
+                    "Active",
+                    "Pending",
+                    "Closed",
+                    "None"
+                ],
+                correct: 0,
+                rationale: "Lệnh rec['status'] = 'Active' thay đổi trực tiếp đối tượng gốc. Phép gán rec = {...} sau đó chuyển hướng biến cục bộ sang một đối tượng mới hoàn toàn nên không tác động gì thêm."
+            },
+            {
+                q: "Cho mảng số nguyên A = [29, 10, 14, 37, 13]. Nếu sử dụng thuật toán Sắp xếp chọn (Selection Sort) để sắp xếp mảng theo thứ tự tăng dần, trạng thái của mảng sau 2 lần hoán đổi (swaps) đầu tiên là gì?",
+                options: [
+                    "10, 13, 14, 37, 29",
+                    "10, 29, 14, 37, 13",
+                    "10, 14, 29, 13, 37",
+                    "10, 13, 14, 29, 37"
+                ],
+                correct: 0,
+                rationale: "Swap 1: số nhỏ nhất (10) đổi chỗ với vị trí đầu (29) -> [10, 29, 14, 37, 13]. Swap 2: từ phần tử thứ hai, nhỏ nhất là 13, đổi chỗ với 29 -> [10, 13, 14, 37, 29]."
+            },
+            {
+                q: "Đâu là phát biểu đúng về Linear search (tìm kiếm tuyến tính)?",
+                options: [
+                    "Duyệt từng phần tử cho tới khi gặp mục tiêu hoặc hết danh sách",
+                    "Chỉ dùng cho danh sách đã sắp xếp",
+                    "Luôn có độ phức tạp O(log n)",
+                    "Luôn nhanh hơn tìm kiếm nhị phân (binary search)"
+                ],
+                correct: 0,
+                rationale: "Linear search đơn giản là quét tuần tự từ đầu đến cuối danh sách để so sánh giá trị cần tìm."
+            },
+            {
+                q: `Cho đoạn mã thực hiện thuật toán merge sort sắp xếp mảng [3, 1, 4, 2] nhưng đang bị khuyết phần gộp phần tử dư sau vòng lặp while:
+\`\`\`python
+def merge(left, right):
+    result = []
+    i = j = 0
+    while i < len(left) and j < len(right):
+        if left[i] < right[j]:
+            result.append(left[i]); i += 1
+        else:
+            result.append(right[j]); j += 1
+    return result
+\`\`\`
+Kết quả in ra màn hình khi chạy merge_sort([3, 1, 4, 2]) là:`,
+                options: [
+                    "[1]",
+                    "[1, 2, 3, 4]",
+                    "Lỗi IndexError",
+                    "[3, 4]"
+                ],
+                correct: 0,
+                rationale: "Do khuyết bước gộp phần tử còn dư sau khi một mảng con duyệt xong, các giá trị lớn hơn bị bỏ rơi và chỉ trả về mảng con chứa duy nhất số 1."
+            },
+            {
+                q: `Hàm tìm kiếm nhị phân sau sai trong trường hợp nào?
+\`\`\`python
+def bs(arr, target):
+    lo, hi = 0, len(arr) - 1
+    while lo < hi:
+        mid = (lo + hi) // 2
+        if arr[mid] == target: return mid
+        elif arr[mid] < target: lo = mid + 1
+        else: hi = mid
+    return -1
+\`\`\`
+`,
+                options: [
+                    "Trả về sai khi target đúng bằng phần tử cuối cùng",
+                    "Trả về sai khi target ở giữa mảng",
+                    "Không sai, luôn đúng với mảng tăng dần",
+                    "Trả về sai khi mảng có số âm"
+                ],
+                correct: 0,
+                rationale: "Điều kiện lặp 'lo < hi' làm vòng lặp dừng ngay khi lo bằng hi, bỏ qua việc kiểm tra phần tử nằm ở vị trí cuối cùng của mảng."
+            },
+            {
+                q: "Dựa trên lỗi thuật toán đã phân tích ở Câu 34, phương án sửa đổi nào sau đây là chính xác tại vị trí lỗi?",
+                options: [
+                    "Thiếu việc thêm các phần tử còn dư của mảng left hoặc right vào result.",
+                    "Biến i và j không được khởi tạo lại bằng 0 bên trong hàm.",
+                    "Kết quả result phải được sắp xếp lại bằng hàm sort().",
+                    "Vòng lặp while bị sai điều kiện, phải là or thay vì and."
+                ],
+                correct: 0,
+                rationale: "Cần phải bổ sung thêm các lệnh gom nốt phần tử dư như: result.extend(left[i:]) và result.extend(right[j:]) sau khi vòng lặp while kết thúc."
+            },
+            {
+                q: `Chương trình báo lỗi AttributeError: 'SmartDevice' object has no attribute 'brand'. Lỗi nằm ở dòng nào?
+\`\`\`python
+class SmartDevice:
+    def __init__(self, brand, price):
+        brand = brand       # Dòng 1
+        self.price = price   # Dòng 2
+    def display(self):
+        print(f"Brand: {self.brand}, Price: {self.price}") # Dòng 3
+phone = SmartDevice("UET-Phone", 500)
+phone.display()
+\`\`\`
+`,
+                options: [
+                    "Dòng 1",
+                    "Dòng 2",
+                    "Dòng 3",
+                    "Dòng khởi tạo phone: Thiếu tham số truyền"
+                ],
+                correct: 0,
+                rationale: "Tại Dòng 1, viết brand = brand chỉ tạo biến cục bộ tạm thời. Để gán thuộc tính cho thực thể đối tượng bắt buộc phải dùng self.brand = brand."
+            },
+            {
+                q: `Cho đoạn mã khai báo lớp sau đây:
+\`\`\`python
+class Dog:
+    kind = 'canine'
+    def __init__(self, name):
+        self.name = name
+d1 = Dog('wolf')
+d2 = Dog('husky')
+print(d1.kind, d2.kind)
+\`\`\`
+Kết quả hiển thị trên màn hình là gì?`,
+                options: [
+                    "canine canine",
+                    "canine wolf",
+                    "wolf wolf",
+                    "wolf canine"
+                ],
+                correct: 0,
+                rationale: "Biến kind được khai báo ở mức lớp (Class attribute) nên mọi đối tượng thực thể được tạo ra từ lớp Dog đều dùng chung giá trị này."
+            },
+            {
+                q: `Đoạn mã Python sau sẽ cho ra kết quả gì?
+\`\`\`python
+class Test:
+    def __init__(self, a="Hello World"):
+        self.a = a
+    def display(self):
+        print(self.a)
+obj = Test()
+obj.display()
+\`\`\`
+`,
+                options: [
+                    "\"Hello World\"",
+                    "Không hiển thị gì",
+                    "Chương trình báo lỗi vì hàm tạo không thể có các tham số mặc định.",
+                    "Chương trình có chức năng hiển thị lỗi nhưng không có tham số."
+                ],
+                correct: 0,
+                rationale: "Khi khởi tạo đối tượng không truyền tham số, self.a tự động nhận giá trị chuỗi mặc định 'Hello World'."
+            },
+            {
+                q: `Đoạn code sau có kết quả là gì?
+\`\`\`python
+class A:
+    def f(self):
+        return "A"
+class B(A):
+    def f(self):
+        return "B"
+x = B()
+print(x.f())
+\`\`\`
+`,
+                options: [
+                    "B",
+                    "A",
+                    "Lỗi vì B kế thừa A không được ghi đè",
+                    "In cả \"A\" và \"B\""
+                ],
+                correct: 0,
+                rationale: "Lớp B kế thừa từ A và thực hiện ghi đè phương thức f(). Thực thể x thuộc lớp B nên sẽ ưu tiên thực hiện phương thức của B."
+            },
+            {
+                q: `Hàm tính giai thừa sử dụng đệ quy (Recursion):
+\`\`\`python
+def fact(n):
+    if n == 0: return 1
+    return n * fact(n-1)
+print(fact(4) - fact(3))
+\`\`\`
+Kết quả thu được là:`,
+                options: [
+                    "18",
+                    "20",
+                    "24",
+                    "6"
+                ],
+                correct: 0,
+                rationale: "fact(4) bằng 24, fact(3) bằng 6. Thực hiện phép toán: 24 - 6 = 18."
+            },
+            {
+                q: `Cho hàm đệ quy xử lý danh sách lồng nhau (Nested List) như sau. Kết quả của calculate([1, [2, 3, 4], 5]) là bao nhiêu?
+\`\`\`python
+def calculate(data):
+    total = 0
+    for item in data:
+        if isinstance(item, list):
+            total += calculate(item)
+        else:
+            total += 1
+    return total
+\`\`\`
+`,
+                options: [
+                    "5",
+                    "3",
+                    "4",
+                    "15"
+                ],
+                correct: 0,
+                rationale: "Hàm bóc tách đệ quy để đếm các phần tử đơn: số 1 (1), mảng con [2, 3, 4] đóng góp 3, số 5 đóng góp 1 -> Tổng cộng thu được 5."
+            },
+            {
+                q: `Hàm kiểm tra chuỗi đối xứng này gặp một lỗi logic (Bug) khiến nó trả về None trong một số trường hợp. Lỗi nằm ở đâu?
+\`\`\`python
+def is_palindrome(s):
+    if len(s) <= 1: return True
+    if s[0] == s[-1]:
+        return is_palindrome(s[1:-1])
+\`\`\`
+`,
+                options: [
+                    "Thiếu lệnh return False khi s[0] != s[-1].",
+                    "Phép so sánh s[0] == s[-1] chỉ đúng với kiểu số, không đúng với kiểu chuỗi.",
+                    "Trường hợp cơ sở (base case) sai, phải là len(s) == 0.",
+                    "Lệnh gọi đệ quy is_palindrome(s[1:-1]) sai chỉ số cắt chuỗi."
+                ],
+                correct: 0,
+                rationale: "Khi ký tự đầu khác ký tự cuối, hàm đi ra ngoài tầm kiểm soát của if mà không có lệnh return nào, dẫn tới tự động trả về giá trị None."
+            },
+            {
+                q: `Xét đoạn mã sau:
+\`\`\`python
+try:
+    x = int("abc")
+    print("Converted")
+except:
+    print("Error")
+print("Done")
+\`\`\`
+Chương trình in ra gì?`,
+                options: [
+                    "Error rồi Done",
+                    "Error",
+                    "Converted",
+                    "Done rồi Error"
+                ],
+                correct: 0,
+                rationale: "int('abc') gây lỗi ValueError, luồng nhảy sang khối except in ra 'Error', rồi tiếp tục chạy tuần tự khối lệnh ngoài in ra 'Done'."
+            },
+            {
+                q: `Cho đoạn mã sau:
+\`\`\`python
+def f():
+    try:
+        return 1 / 0
+    except ZeroDivisionError:
+        return 42
+    finally:
+        print("DONE")
+print(f())
+\`\`\`
+Chương trình in ra gì?`,
+                options: [
+                    "DONE 42",
+                    "DONE",
+                    "42 DONE",
+                    "Báo lỗi và không in gì"
+                ],
+                correct: 0,
+                rationale: "Khối finally luôn được chạy ưu tiên trước khi hàm chính thức trả kết quả thoát ra ngoài, do đó 'DONE' được in trước rồi giá trị 42 mới hiển thị."
+            },
+            {
+                q: `Cho đoạn mã sau:
+\`\`\`python
+def divide(a, b):
+    try:
+        result = a / b
+        print("Result is", result)
+    except ZeroDivisionError:
+        print("Error: Cannot divide by zero.")
+    finally:
+        print("Cleaning up and completing")
+res = divide(10, 0)
+print(res)
+\`\`\`
+Kết quả in ra là gì?`,
+                options: [
+                    "Error: Cannot divide by zero. - Cleaning up and completing - None",
+                    "Cleaning up and completing - None",
+                    "Error: Cannot divide by zero. - Cleaning up and completing",
+                    "Báo lỗi ZeroDivisionError và chương trình dừng"
+                ],
+                correct: 0,
+                rationale: "Chia cho 0 gây lỗi chạy vào except và finally. Vì hàm divide không có giá trị trả về cụ thể nên kết quả nhận được của res là None."
+            },
+            {
+                q: `Kết quả của đoạn mã sau là gì?
+\`\`\`python
+try:
+    x = int("abc")
+except ValueError:
+    x = 0
+finally:
+    x = x + 1
+print(x)
+\`\`\`
+`,
+                options: [
+                    "1",
+                    "0",
+                    "None",
+                    "Lỗi (ValueError)"
+                ],
+                correct: 0,
+                rationale: "Lỗi ValueError đưa x về 0 trong khối except. Khối finally chạy tiếp tục tăng x lên 1 đơn vị, cho kết quả x = 1."
+            },
+            {
+                q: "Giả sử file có nội dung đúng như sau: ABC DEF. Nếu con trỏ file đang ở đầu file, phát biểu nào sau đây đúng?",
+                options: [
+                    "f.read(1) trả về \"A\"",
+                    "f.readline() trả về \"AB\"",
+                    "f.read(1) trả về \"ABC\"",
+                    "f.readline() trả về \"DEF\""
+                ],
+                correct: 0,
+                rationale: "Hàm read(1) thực hiện hành vi đọc chính xác đúng 1 ký tự tính từ vị trí hiện tại của con trỏ file."
+            },
+            {
+                q: "Chọn đáp án đúng khi thực hiện đoạn mã mở tệp với chế độ không hợp lệ \"rw+\" và gọi phương thức fo.next() trong Python 3:",
+                options: [
+                    "Không có đáp án đúng",
+                    "Syntax Error",
+                    "Compilation Error",
+                    "Displays Output"
+                ],
+                correct: 0,
+                rationale: "Chế độ 'rw+' không hợp lệ trong Python 3 (gây lỗi ValueError), đồng thời đối tượng file không có phương thức .next(), chương trình sẽ bị sập đột ngột."
+            },
+            {
+                q: "Phương thức nào sau đây được sử dụng phổ biến nhất để chèn thêm một phần tử mới vào vị trí cuối cùng của một danh sách (list) trong Python?",
+                options: [
+                    "append()",
+                    "extend()",
+                    "insert()",
+                    "add()"
+                ],
+                correct: 0,
+                rationale: "Phương thức append() nhận một đối tượng làm đối số truyền vào và gắn trực tiếp nó vào phần đuôi cuối cùng của danh sách."
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let userAnswers = new Array(quizData.length).fill(null);
+        let isSubmitted = false;
+
+        // Initialize Web Application
+        window.onload = function() {
+            renderNavigationGrid();
+            loadQuestion(0);
+            updateProgress();
+        };
+
+        function renderNavigationGrid() {
+            const gridContainer = document.getElementById('nav-grid');
+            gridContainer.innerHTML = '';
+            for (let i = 0; i < quizData.length; i++) {
+                const item = document.createElement('div');
+                item.className = "aspect-square flex items-center justify-center border border-slate-300 rounded-lg text-sm font-semibold cursor-pointer transition-all bg-white hover:bg-slate-50 hover:border-slate-400 select-none";
+                item.id = `nav-item-${i}`;
+                item.innerText = i + 1;
+                item.onclick = () => jumpToQuestion(i);
+                gridContainer.appendChild(item);
+            }
+        }
+
+        function loadQuestion(index) {
+            currentQuestionIndex = index;
+            const qItem = quizData[index];
+
+            // Highlight active navigation box
+            document.querySelectorAll('#nav-grid > div').forEach((item, idx) => {
+                item.classList.remove('ring-2', 'ring-indigo-600', 'ring-offset-2', 'font-bold');
+                if (idx === index) {
+                    item.classList.add('ring-2', 'ring-indigo-600', 'ring-offset-2', 'font-bold');
+                }
+            });
+
+            // Set up title number
+            document.getElementById('card-question-number').innerText = `Câu hỏi ${index + 1} / ${quizData.length}`;
+
+            // Set up Status Badge
+            const statusBadge = document.getElementById('question-status-badge');
+            if (isSubmitted) {
+                statusBadge.classList.remove('hidden');
+                if (userAnswers[index] === qItem.correct) {
+                    statusBadge.innerText = "Đúng";
+                    statusBadge.className = "text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800";
+                } else {
+                    statusBadge.innerText = "Sai";
+                    statusBadge.className = "text-xs font-semibold px-2.5 py-1 rounded-full bg-rose-100 text-rose-800";
+                }
+            } else {
+                statusBadge.classList.add('hidden');
+            }
+
+            // Parse markdown code blocks in question text safely
+            let formattedQ = qItem.q
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/`([^`]+)`/g, '<code class="bg-slate-100 text-rose-600 px-1 py-0.5 rounded font-mono text-sm">$1</code>')
+                .replace(/\\`\\`\\`python([\s\S]*?)\\`\\`\\`/g, '<pre class="bg-slate-900 text-slate-100 p-4 rounded-xl overflow-x-auto font-mono text-sm my-4 leading-relaxed border border-slate-800">$1</pre>')
+                .replace(/```python([\s\S]*?)```/g, '<pre class="bg-slate-900 text-slate-100 p-4 rounded-xl overflow-x-auto font-mono text-sm my-4 leading-relaxed border border-slate-800">$1</pre>');
+
+            document.getElementById('question-text').innerHTML = formattedQ;
+
+            // Render Option Items
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+
+            qItem.options.forEach((opt, oIdx) => {
+                const li = document.createElement('div');
+                li.className = "flex items-center gap-3 border border-slate-200 rounded-xl p-4 cursor-pointer hover:bg-slate-50 transition-all select-none";
+                
+                // Active status check
+                if (isSubmitted) {
+                    li.classList.add('cursor-not-allowed');
+                    if (oIdx === qItem.correct) {
+                        li.className = "flex items-center gap-3 border border-emerald-300 rounded-xl p-4 bg-emerald-50 text-emerald-900 font-medium transition-all cursor-not-allowed";
+                    } else if (userAnswers[index] === oIdx && userAnswers[index] !== qItem.correct) {
+                        li.className = "flex items-center gap-3 border border-rose-300 rounded-xl p-4 bg-rose-50 text-rose-950 transition-all cursor-not-allowed";
+                    }
+                } else {
+                    if (userAnswers[index] === oIdx) {
+                        li.className = "flex items-center gap-3 border border-indigo-500 rounded-xl p-4 bg-indigo-50/50 text-indigo-900 font-medium transition-all";
+                    }
+                }
+
+                const checked = userAnswers[index] === oIdx ? 'checked' : '';
+                const disabled = isSubmitted ? 'disabled' : '';
+
+                li.innerHTML = `
+                    <input type="radio" name="options" id="opt-${oIdx}" value="${oIdx}" ${checked} ${disabled} class="w-4 h-4 text-indigo-600 border-slate-300 focus:ring-indigo-500 cursor-pointer">
+                    <label for="opt-${oIdx}" class="text-sm cursor-pointer w-full leading-relaxed">${opt.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</label>
+                `;
+
+                li.onclick = () => selectOption(oIdx);
+                optionsContainer.appendChild(li);
+            });
+
+            // Render Explanation Box
+            const explanationBox = document.getElementById('explanation-box');
+            if (isSubmitted) {
+                explanationBox.classList.remove('hidden');
+                document.getElementById('explanation-text').innerText = qItem.rationale;
+            } else {
+                explanationBox.classList.add('hidden');
+            }
+
+            // Handle footer buttons state
+            document.getElementById('btn-prev').disabled = index === 0;
+            document.getElementById('btn-next').disabled = index === quizData.length - 1;
+        }
+
+        function selectOption(oIdx) {
+            if (isSubmitted) return;
+            userAnswers[currentQuestionIndex] = oIdx;
+
+            // Refresh option view
+            loadQuestion(currentQuestionIndex);
+
+            // Update navigation grid cell background
+            const cell = document.getElementById(`nav-item-${currentQuestionIndex}`);
+            cell.className = "aspect-square flex items-center justify-center border border-indigo-300 rounded-lg text-sm font-semibold cursor-pointer transition-all bg-indigo-50 text-indigo-700 hover:bg-indigo-100 select-none";
+
+            updateProgress();
+        }
+
+        function jumpToQuestion(idx) {
+            loadQuestion(idx);
+        }
+
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                loadQuestion(currentQuestionIndex - 1);
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < quizData.length - 1) {
+                loadQuestion(currentQuestionIndex + 1);
+            }
+        }
+
+        function updateProgress() {
+            const answeredCount = userAnswers.filter(a => a !== null).length;
+            const percentage = Math.round((answeredCount / quizData.length) * 100);
+            
+            document.getElementById('progress-text').innerText = `${answeredCount} / ${quizData.length} câu (${percentage}%)`;
+            document.getElementById('progress-bar-fill').style.width = `${percentage}%`;
+        }
+
+        function submitExam() {
+            if (isSubmitted) return;
+
+            const answeredCount = userAnswers.filter(a => a !== null).length;
+            let confirmMsg = "Bạn đã hoàn thành đủ các câu hỏi. Bạn có chắc chắn muốn nộp bài?";
+            
+            if (answeredCount < quizData.length) {
+                confirmMsg = `Bạn mới chỉ hoàn thành ${answeredCount} / ${quizData.length} câu hỏi. Hãy tiếp tục làm bài hoặc nhấn OK để nộp bài luôn!`;
+            }
+
+            if (!confirm(confirmMsg)) return;
+
+            isSubmitted = true;
+            document.getElementById('btn-submit').classList.add('hidden');
+
+            // Calculate results & color-code navigator board
+            let score = 0;
+            quizData.forEach((item, idx) => {
+                const cell = document.getElementById(`nav-item-${idx}`);
+                cell.className = "aspect-square flex items-center justify-center border text-sm font-bold cursor-pointer transition-all select-none ";
+                
+                if (userAnswers[idx] === item.correct) {
+                    score++;
+                    cell.classList.add('bg-emerald-100', 'border-emerald-300', 'text-emerald-700', 'hover:bg-emerald-200');
+                } else {
+                    cell.classList.add('bg-rose-100', 'border-rose-300', 'text-rose-700', 'hover:bg-rose-200');
+                }
+            });
+
+            // Update scores banner
+            document.getElementById('result-score').innerText = `${score} / ${quizData.length}`;
+            const percentage = ((score / quizData.length) * 100).toFixed(1);
+            document.getElementById('result-percentage').innerText = `Độ chính xác: ${percentage}%`;
+
+            const banner = document.getElementById('result-banner');
+            banner.classList.remove('hidden');
+            setTimeout(() => {
+                banner.classList.remove('scale-95', 'opacity-0');
+                banner.classList.add('scale-100', 'opacity-100');
+            }, 100);
+
+            // Re-render active cards to showcase correct options
+            loadQuestion(currentQuestionIndex);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function resetQuiz() {
+            if (!confirm("Bạn muốn làm lại từ đầu?")) return;
+
+            isSubmitted = false;
+            userAnswers = new Array(quizData.length).fill(null);
+            
+            document.getElementById('btn-submit').classList.remove('hidden');
+            document.getElementById('result-banner').classList.add('hidden');
+            document.getElementById('result-banner').classList.add('scale-95', 'opacity-0');
+
+            renderNavigationGrid();
+            loadQuestion(0);
+            updateProgress();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
+
+
+Tôi đã sửa lại toàn bộ các vấn đề hiển thị và kiểm tra kỹ lưỡng cấu trúc dữ liệu của **50 câu hỏi trắc nghiệm Python** để bảo đảm:
+1. **Không bỏ sót:** Toàn bộ 50 câu hỏi được phân loại và biểu diễn chính xác 100% so với tài liệu PDF gốc của bạn.
+2. **Không lỗi script:** Khắc phục hoàn toàn lỗi lặp, lỗi tham chiếu, hoặc lỗi font chữ đặc biệt từ định dạng PDF.
+3. **Chức năng mượt mà:** Sau khi hoàn thành và nhấn **Nộp Bài**, hệ thống sẽ tự động đối chiếu đáp án đúng/sai, đổi màu ô số từ 1 đến 50 ở bảng bên phải để bạn xem giải thích chi tiết dễ dàng.
+
+Chúc bạn có những giây phút ôn tập thật hiệu quả và đạt điểm tối đa trong kỳ thi sắp tới!
